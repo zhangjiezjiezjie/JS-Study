@@ -1,120 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>执行栈/执行上下文简单理解</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>执行栈</title>
 </head>
+
 <body>
-    <script>
-        // 1
-         var a = 'JavaScript';
-         function first() {
-             console.log('first');
-             second();
-             console.log('second2');
-         }
-         function second() {
-             console.log('second1');
-         }
-         first();
+  <script>
+    // var a = 'hello world'
+    // function first() {
+    //   console.log('first')
+    //   second()
+    //   console.log('first-again')
 
-        // 2
-        var scope = 'global scope';
-        function checkscope(){
-            var scope = 'local scope';
-            function f(){
-                return scope;
-            }
-            return f();
-        }
-        checkscope(); // 执行checkscope()，return f();再执行 f(),return scope
+    // }
 
-        // ECStack.push(<checkscope> functionContext)
-        // ECStack.push(<f> functionContext)
-        // ECStack.pop()
-        // ECStack.pop()
+    // function second() {
+    //   console.log('second')
+    // }
 
-        // 3
-        var scope = 'global scope';
-        function checkscope(){
-            var scope = 'local scope';
-            function f(){
-                return scope;
-            }
-            return f;
-        }
-        checkscope()(); // 先执行checkscope()，return f;checkscope()执行完毕，弹出;再执行f(),return scope
-
-        // ECStack.push(<checkscope> functionContext)
-        // ECStack.pop()
-        // ECStack.push(<f> functionContext)
-        // ECStack.pop()
-
-        // 4
-        function fn(a,c) {
-          console.log(a);//function a() { }
-          var a = 123;
-          console.log(a); // 123
-          console.log(c); //function c() { }
-          function a() { }
-          if(false){
-              var d = 678; //不执行
-          }
-          console.log(d); //undefined
-          console.log(b); // undefined
-          var b = function () { }
-          console.log(b); //function () { }
-          function c() { }
-          console.log(c); // function c() { }
-        }
-        fn(1,2); // 实参和形参统一
-        /*
-        * 先找形参和变量声明
-        * 实参和形参统一
-        * 找函数声明，如果存在同名的替代变量对象
-        * 最后一行一行执行代码
-        *
-        * AO:
-        *  a:undefined（找形参和变量声明）   1（实参和形参统一）    function a() { } (找函数声明)
-        *  c:undefined   2    function c() { }
-        *  d:undefined
-        *  b:undefined
-        * */
-
-        // 5
-        console.log(b); // undefined
-        console.log(test); // function test () {}
-        function test(a) {
-           console.log(c); //undefind
-           var a = b = 345 // 相当于： var a = 345 ; b = 345,b为全局的修改了变量
-            c = 9
-            if(false){
-                var c = 789
-            }
-            console.log(a) //345
-            console.log(c) // 9
-        }
-        test(234)
-        console.log(b)//345
-        console.log(test) // function test (){}
-        var test = 123
-        var b = 456
-        /*
-        *
-        * VO:{
-        *  test:undefined   function test () {}
-        *  b:undefined 345
-        * }
-        * AO:{
-        * a: undefined 234 345
-        * c: undefined 9
-        *
-        * }
-        *
-        * */
+    // first()
 
 
-    </script>
+    // console.log(test) // function test() { }
+    // console.log(b) // undefined
+    // function test() {
+
+    // }
+    // var test = 123
+    // var b = 456
+
+
+    //   1. 找变量声明 作为VO的属性名 值为undefined
+    // 2. 找函数声明：如果变量对象已经存在相同名称的属性，则完全替换这个属性。
+
+
+    // 预编译 
+
+    // VO: {
+    //   test: undefined, function test() { }
+    //   b: undefined
+    // }
+
+
+
+    // function fn(a, c) {
+    //   console.log(a) //  function a() { }
+    //   var a = 123
+    //   console.log(a) // 123
+    //   console.log(c) // function c() { }
+    //   function a() { }
+    //   if (false) {
+    //     var d = 678
+    //   }
+    //   console.log(d) // undefiend
+    //   console.log(b) // undefined
+    //   var b = function () { }
+    //   console.log(b)  // function () { }
+    //   function c() { }
+    //   console.log(c) // function c() { }
+    // }
+    // fn(1, 2)
+
+
+    //   1、创建阶段（预编译阶段）
+    // 1. 找形参和变量声明 作为AO的属性名 值为undefined
+    // 2. 将实参和形参相统一
+    // 3. 找函数声明：如果变量对象已经存在相同名称的属性，则完全替换这个属性。
+
+    // AO: {
+    //   a: undefined 1 function a() { }
+    //   c: undefined 2 function c() { }
+    //   d: undefined
+    //   b: undefiend
+    // }
+
+
+    console.log(b) // un
+    console.log(test) // function test(){}
+    function test(a) {
+      console.log(c) // unde
+      var a = b = 345
+      c = 9
+      if (false) {
+        var c = 789
+      }
+      console.log(a) // 345
+      console.log(c) // 9
+    }
+    test(234)
+
+    console.log(b) // 345
+    console.log(test) // function test(){}
+    var test = 123
+    var b = 456
+
+    // vo:{
+    //   test : un function test(){}
+    //   b : un 345
+    // }
+
+    // AO:{
+    //   a : un 234 345
+    //   c : un 9
+
+    // }
+
+
+    function test(a) {
+      console.log(a)
+
+    }
+    test(234)
+    // test(1)
+
+  </script>
 </body>
+
 </html>
